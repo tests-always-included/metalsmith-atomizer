@@ -3,7 +3,7 @@ metalsmith-atomizer
 
 Metalsmith plugin to use [Atomizer] to build your [Atomic CSS].
 
-[![npm version](npm-badge)][npm-link]
+[![npm version][npm-badge]][npm-link]
 [![Build Status][travis-badge]][travis-link]
 [![Dependencies][dependencies-badge]][dependencies-link]
 [![Dev Dependencies][devdependencies-badge]][devdependencies-link]
