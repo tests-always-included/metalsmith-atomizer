@@ -50,7 +50,7 @@ Include this like you would include any other plugin.
         destination: "atomic.css",
 
         // Pattern of files to match
-        match: "**/*.css",
+        match: "**/*.{html,htm}",
 
         // Options for matching files.  See minimatch.
         matchOptions: {},
