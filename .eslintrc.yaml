@@ -177,7 +177,7 @@ rules:
     prefer-arrow-callback:
         - off
     prefer-const: error
-    prefer-template: error
+    prefer-template: off
     quote-props:
         - error
         - as-needed

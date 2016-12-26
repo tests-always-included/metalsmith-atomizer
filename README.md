@@ -15,7 +15,7 @@ Installation
 
 `npm` can do this for you.
 
-    npm install --save-dev metalsmith-atomizer
+    npm install --save metalsmith-atomizer
 
 
 Usage
@@ -61,6 +61,10 @@ Include this like you would include any other plugin.
     })
 
 This uses [minimatch] to match files.  The `.matchOptions` object can be filled with options that the [minimatch] library uses.
+
+This plugin also can display the classes found by each processed file.  Enable debugging by setting the `DEBUG` environment variable when running your build.
+
+    DEBUG=metalsmith-atomizer metalsmith
 
 
 Development
