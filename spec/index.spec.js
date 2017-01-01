@@ -161,4 +161,46 @@ describe("metalsmith-atomizer", function () {
         });
         expect(files["atomic.css"].contents).toContain("123px");
     });
+    it("remembers by default", function () {
+        var files, middleware;
+
+        files = {
+            "test.html": {
+                contents: Buffer.from("<div class=\"W(1)\">", "utf8")
+            }
+        };
+        middleware = plugin();
+        middleware(files, {}, function () {});
+        expect(files["atomic.css"].contents.toString("utf8")).toContain("W\\(1\\)");
+        files = {
+            "another-test.html": {
+                contents: Buffer.from("div class=\"H(2)\">", "utf8")
+            }
+        };
+        middleware(files, {}, function () {});
+        expect(files["atomic.css"].contents.toString("utf8")).toContain("W\\(1\\)");
+        expect(files["atomic.css"].contents.toString("utf8")).toContain("H\\(2\\)");
+    });
+    it("forgets previous builds", function () {
+        var files, middleware;
+
+        files = {
+            "test.html": {
+                contents: Buffer.from("<div class=\"W(1)\">", "utf8")
+            }
+        };
+        middleware = plugin({
+            forget: true
+        });
+        middleware(files, {}, function () {});
+        expect(files["atomic.css"].contents.toString("utf8")).toContain("W\\(1\\)");
+        files = {
+            "another-test.html": {
+                contents: Buffer.from("div class=\"H(2)\">", "utf8")
+            }
+        };
+        middleware(files, {}, function () {});
+        expect(files["atomic.css"].contents.toString("utf8")).not.toContain("W\\(1\\)");
+        expect(files["atomic.css"].contents.toString("utf8")).toContain("H\\(2\\)");
+    });
 });

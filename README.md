@@ -30,6 +30,8 @@ Include this like you would include any other plugin.  First, a CLI example that
                 "addRules": {},
                 "bufferEncoding": "utf8",
                 "destination": "atomic.css",
+                "destinationMode": "0644",
+                "forget": false,
                 "match": "**/*.{html,htm}",
                 "matchOptions": {},
                 "setOptions": {}
@@ -62,8 +64,16 @@ And this is a JavaScript example that also includes a brief explanation of the o
         // into buffers, which encoding should be used?
         bufferEncoding: "utf8",
 
-        // Name of the generated file
+        // Name of the generated file.
         destination: "atomic.css",
+
+        // File permissions of the generated CSS file.
+        destinationMode: "0644",
+
+        // Set to true if the list of detected CSS rules should be forgotten.
+        // Remembering these rules helps the plugin work with
+        // metalsmith-watch and similar plugins.
+        forget: false,
 
         // Pattern of files to match
         match: "**/*.{html,htm}",
@@ -81,6 +91,8 @@ This uses [minimatch] to match files.  The `.matchOptions` object can be filled 
 This plugin also can display the classes found by each processed file.  Enable debugging by setting the `DEBUG` environment variable when running your build.
 
     DEBUG=metalsmith-atomizer metalsmith
+
+`metalsmith-atomizer` remembers the detected CSS rules between runs.  This makes it work far better with [metalsmith-watch] and other plugins that perform the same sort of action.  If you add and remove CSS classes, the plugin keeps track of what file added what Atomic CSS rules and updates the result accordingly.  This allows for incremental or partial builds of your project.  If this is undesirable, set `forget` to `true`.
 
 
 Development
@@ -106,6 +118,7 @@ This plugin is licensed under the [MIT License][License] with an additional non-
 [devdependencies-badge]: https://david-dm.org/tests-always-included/metalsmith-atomizer/dev-status.png
 [devdependencies-link]: https://david-dm.org/tests-always-included/metalsmith-atomizer#info=devDependencies
 [License]: LICENSE.md
+[metalsmith-watch]: https://github.com/FWeinb/metalsmith-watch
 [minimatch]: https://github.com/isaacs/minimatch
 [npm-badge]: https://badge.fury.io/js/metalsmith-atomizer.svg
 [npm-link]: https://npmjs.org/package/metalsmith-atomizer

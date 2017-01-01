@@ -2,6 +2,12 @@ Changelog
 =========
 
 
+2017-01-01 - 1.0.3
+------------------
+
+* Properly remembers or forgets, which allows for incremental builds.
+
+
 2016-12-26 - 1.0.2
 ------------------
 
