@@ -21,7 +21,23 @@ Installation
 Usage
 -----
 
-Include this like you would include any other plugin.
+Include this like you would include any other plugin.  First, a CLI example that also shows the default options.  You don't need to specify any options unless you want to change their values.
+
+    {
+        "plugins": {
+            "metalsmith-atomizer": {
+                "acssConfig": {},
+                "addRules": {},
+                "bufferEncoding": "utf8",
+                "destination": "atomic.css",
+                "match": "**/*.{html,htm}",
+                "matchOptions": {},
+                "setOptions": {}
+            }
+        }
+    }
+
+And this is a JavaScript example that also includes a brief explanation of the options.
 
     // Load this, just like other plugins.
     var atomizer = require("metalsmith-atomizer");
