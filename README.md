@@ -111,16 +111,16 @@ This plugin is licensed under the [MIT License][License] with an additional non-
 
 [Atomic CSS]: http://acss.io/
 [Atomizer]: https://github.com/yahoo/atomizer
-[codecov-badge]: https://codecov.io/github/tests-always-included/metalsmith-atomizer/coverage.svg?branch=master
+[codecov-badge]: https://img.shields.io/codecov/c/github/tests-always-included/metalsmith-atomizer/master.svg
 [codecov-link]: https://codecov.io/github/tests-always-included/metalsmith-atomizer?branch=master
-[dependencies-badge]: https://david-dm.org/tests-always-included/metalsmith-atomizer.png
+[dependencies-badge]: https://img.shields.io/david/tests-always-included/metalsmith-atomizer.svg
 [dependencies-link]: https://david-dm.org/tests-always-included/metalsmith-atomizer
-[devdependencies-badge]: https://david-dm.org/tests-always-included/metalsmith-atomizer/dev-status.png
+[devdependencies-badge]: https://img.shields.io/david/dev/tests-always-included/metalsmith-atomizer.svg
 [devdependencies-link]: https://david-dm.org/tests-always-included/metalsmith-atomizer#info=devDependencies
 [License]: LICENSE.md
 [metalsmith-watch]: https://github.com/FWeinb/metalsmith-watch
 [minimatch]: https://github.com/isaacs/minimatch
-[npm-badge]: https://badge.fury.io/js/metalsmith-atomizer.svg
+[npm-badge]: https://img.shields.io/npm/v/metalsmith-atomizer.svg
 [npm-link]: https://npmjs.org/package/metalsmith-atomizer
-[travis-badge]: https://secure.travis-ci.org/tests-always-included/metalsmith-atomizer.png
+[travis-badge]: https://img.shields.io/travis/tests-always-included/metalsmith-atomizer/master.svg
 [travis-link]: http://travis-ci.org/tests-always-included/metalsmith-atomizer
