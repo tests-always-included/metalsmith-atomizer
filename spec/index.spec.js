@@ -4,6 +4,28 @@ var plugin;
 
 plugin = require("..");
 
+
+/**
+ * Run the plugin and return a promise.
+ *
+ * @param {Function} middleware
+ * @param {Object} files
+ * @return {Promise.<*>}
+ */
+function pluginAsync(middleware, files) {
+    return new Promise((resolve, reject) => {
+        // The plugin ignores the metalsmith object.
+        middleware(files, {}, (err) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve();
+            }
+        });
+    });
+}
+
+
 /**
  * Kick off the plugin and send it a list of files.
  *
@@ -19,33 +41,30 @@ function runPlugin(files, config) {
     }
 
     // Convert everything to Buffer objects
-    Object.keys(files).forEach(function (file) {
+    Object.keys(files).forEach((file) => {
         files[file].contents = Buffer.from(files[file].contents, "utf8");
     });
 
-    // The plugin ignores the metalsmith object and is synchronous,
-    // so the "done" callback doesn't need to do anything.
-    plugin(config)(files, {}, function () {});
+    return pluginAsync(plugin(config), files).then(() => {
+        // Convert everything to strings for easy comparisons
+        Object.keys(files).forEach((file) => {
+            files[file].contents = files[file].contents.toString("utf8");
+        });
 
-    // Convert everything to strings for easy comparisons
-    Object.keys(files).forEach(function (file) {
-        files[file].contents = files[file].contents.toString("utf8");
+        return files;
     });
-
-    return files;
 }
 
-describe("metalsmith-atomizer", function () {
-    it("generates a zero byte file with no input", function () {
-        var files;
-
-        files = runPlugin();
-        expect(files["atomic.css"]).toEqual({
-            contents: "",
-            mode: "0644"
+describe("metalsmith-atomizer", () => {
+    it("generates a zero byte file with no input", () => {
+        return runPlugin().then((files) => {
+            expect(files["atomic.css"]).toEqual({
+                contents: "",
+                mode: "0644"
+            });
         });
     });
-    it("matches expected files by default", function () {
+    it("matches expected files by default", () => {
         var files;
 
         files = {
@@ -59,16 +78,18 @@ describe("metalsmith-atomizer", function () {
                 contents: "<div class=\"C(#777)\">"
             }
         };
-        runPlugin(files);
-        expect(files["atomic.css"]).toEqual({
-            contents: jasmine.any(String),
-            mode: "0644"
+
+        return runPlugin(files).then(() => {
+            expect(files["atomic.css"]).toEqual({
+                contents: jasmine.any(String),
+                mode: "0644"
+            });
+            expect(files["atomic.css"].contents).toContain("#fff");
+            expect(files["atomic.css"].contents).toContain("#fff");
+            expect(files["atomic.css"].contents).not.toContain("#000");
         });
-        expect(files["atomic.css"].contents).toContain("#fff");
-        expect(files["atomic.css"].contents).toContain("#fff");
-        expect(files["atomic.css"].contents).not.toContain("#000");
     });
-    it("matches files when configured by options", function () {
+    it("matches files when configured by options", () => {
         var files;
 
         files = {
@@ -82,30 +103,31 @@ describe("metalsmith-atomizer", function () {
                 contents: "<div class=\"C(#777)\">"
             }
         };
-        runPlugin(files, {
+
+        return runPlugin(files, {
             match: "**/*.css"
+        }).then(() => {
+            expect(files["atomic.css"]).toEqual({
+                contents: jasmine.any(String),
+                mode: "0644"
+            });
+            expect(files["atomic.css"].contents).not.toContain("#fff");
+            expect(files["atomic.css"].contents).not.toContain("#777");
+            expect(files["atomic.css"].contents).toContain("#000");
         });
-        expect(files["atomic.css"]).toEqual({
-            contents: jasmine.any(String),
-            mode: "0644"
-        });
-        expect(files["atomic.css"].contents).not.toContain("#fff");
-        expect(files["atomic.css"].contents).not.toContain("#777");
-        expect(files["atomic.css"].contents).toContain("#000");
     });
-    it("allows the destination file to be renamed", function () {
-        var files;
-
-        files = runPlugin({}, {
+    it("allows the destination file to be renamed", () => {
+        return runPlugin({}, {
             destination: "thing.whatever"
-        });
-        expect(files["atomic.css"]).not.toBeDefined();
-        expect(files["thing.whatever"]).toEqual({
-            contents: "",
-            mode: "0644"
+        }).then((files) => {
+            expect(files["atomic.css"]).not.toBeDefined();
+            expect(files["thing.whatever"]).toEqual({
+                contents: "",
+                mode: "0644"
+            });
         });
     });
-    it("calls acss.addRules", function () {
+    it("calls acss.addRules", () => {
         var files;
 
         files = {
@@ -113,7 +135,8 @@ describe("metalsmith-atomizer", function () {
                 contents: "<div class=\"Tkl(999px)\">"
             }
         };
-        runPlugin(files, {
+
+        return runPlugin(files, {
             addRules: [
                 {
                     type: "pattern",
@@ -126,10 +149,11 @@ describe("metalsmith-atomizer", function () {
                     }
                 }
             ]
+        }).then(() => {
+            expect(files["atomic.css"].contents).toContain("999px");
         });
-        expect(files["atomic.css"].contents).toContain("999px");
     });
-    it("uses extra config in acss.getCss", function () {
+    it("uses extra config in acss.getCss", () => {
         var files;
 
         files = {
@@ -137,14 +161,16 @@ describe("metalsmith-atomizer", function () {
                 contents: "<div class=\"Fl(start)\">"
             }
         };
-        runPlugin(files, {
+
+        return runPlugin(files, {
             setOptions: {
                 rtl: true
             }
+        }).then(() => {
+            expect(files["atomic.css"].contents).toContain("float: right");
         });
-        expect(files["atomic.css"].contents).toContain("float: right");
     });
-    it("uses acss.getConfig with options.acssConfig", function () {
+    it("uses acss.getConfig with options.acssConfig", () => {
         var files;
 
         files = {
@@ -152,16 +178,18 @@ describe("metalsmith-atomizer", function () {
                 contents: "<div class=\"Fz(heading)\">"
             }
         };
-        runPlugin(files, {
+
+        return runPlugin(files, {
             acssConfig: {
                 custom: {
                     heading: "123px"
                 }
             }
+        }).then(() => {
+            expect(files["atomic.css"].contents).toContain("123px");
         });
-        expect(files["atomic.css"].contents).toContain("123px");
     });
-    it("remembers by default", function () {
+    it("remembers by default", () => {
         var files, middleware;
 
         files = {
@@ -170,18 +198,22 @@ describe("metalsmith-atomizer", function () {
             }
         };
         middleware = plugin();
-        middleware(files, {}, function () {});
-        expect(files["atomic.css"].contents.toString("utf8")).toContain("W\\(1\\)");
-        files = {
-            "another-test.html": {
-                contents: Buffer.from("div class=\"H(2)\">", "utf8")
-            }
-        };
-        middleware(files, {}, function () {});
-        expect(files["atomic.css"].contents.toString("utf8")).toContain("W\\(1\\)");
-        expect(files["atomic.css"].contents.toString("utf8")).toContain("H\\(2\\)");
+
+        return pluginAsync(middleware, files).then(() => {
+            expect(files["atomic.css"].contents.toString("utf8")).toContain("W\\(1\\)");
+            files = {
+                "another-test.html": {
+                    contents: Buffer.from("div class=\"H(2)\">", "utf8")
+                }
+            };
+
+            return pluginAsync(middleware, files);
+        }).then(() => {
+            expect(files["atomic.css"].contents.toString("utf8")).toContain("W\\(1\\)");
+            expect(files["atomic.css"].contents.toString("utf8")).toContain("H\\(2\\)");
+        });
     });
-    it("forgets previous builds", function () {
+    it("forgets previous builds", () => {
         var files, middleware;
 
         files = {
@@ -192,15 +224,19 @@ describe("metalsmith-atomizer", function () {
         middleware = plugin({
             forget: true
         });
-        middleware(files, {}, function () {});
-        expect(files["atomic.css"].contents.toString("utf8")).toContain("W\\(1\\)");
-        files = {
-            "another-test.html": {
-                contents: Buffer.from("div class=\"H(2)\">", "utf8")
-            }
-        };
-        middleware(files, {}, function () {});
-        expect(files["atomic.css"].contents.toString("utf8")).not.toContain("W\\(1\\)");
-        expect(files["atomic.css"].contents.toString("utf8")).toContain("H\\(2\\)");
+
+        return pluginAsync(middleware, files).then(() => {
+            expect(files["atomic.css"].contents.toString("utf8")).toContain("W\\(1\\)");
+            files = {
+                "another-test.html": {
+                    contents: Buffer.from("div class=\"H(2)\">", "utf8")
+                }
+            };
+
+            return pluginAsync(middleware, files);
+        }).then(() => {
+            expect(files["atomic.css"].contents.toString("utf8")).not.toContain("W\\(1\\)");
+            expect(files["atomic.css"].contents.toString("utf8")).toContain("H\\(2\\)");
+        });
     });
 });

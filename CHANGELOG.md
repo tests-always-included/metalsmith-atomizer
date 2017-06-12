@@ -2,6 +2,13 @@ Changelog
 =========
 
 
+2017-06-12 - 1.1.0
+------------------
+
+* Started using metalsmith-plugin-kit.
+* Update documentation.
+
+
 2017-01-01 - 1.0.3
 ------------------
 
