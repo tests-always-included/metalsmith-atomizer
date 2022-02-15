@@ -1,6 +1,6 @@
 {
     "name": "metalsmith-atomizer",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "description": "Metalsmith plugin for Atomizer",
     "tags": [
         "metalsmith",
@@ -27,17 +27,17 @@
     },
     "homepage": "https://github.com/tests-always-included/metalsmith-atomizer#readme",
     "dependencies": {
-        "atomizer": "^3.4.4",
-        "debug": "^2.6.8",
-        "metalsmith-plugin-kit": "^1.0.1"
+        "atomizer": "^3.11.0",
+        "debug": "^4.3.3",
+        "metalsmith-plugin-kit": "^1.2.0"
     },
     "devDependencies": {
-        "codecov": "^2.2.0",
-        "eslint": "^4.0.0",
+        "codecov": "^3.8.2",
+        "eslint": "^8.9.0",
         "istanbul": "^0.4.5",
-        "jasmine": "^2.6.0",
+        "jasmine": "^4.0.2",
         "jasmine-test-helpers": "^1.2.3",
-        "jsdoc-to-markdown": "^3.0.0",
-        "nodemon": "^1.11.0"
+        "jsdoc-to-markdown": "^7.1.1",
+        "nodemon": "^2.0.15"
     }
 }
