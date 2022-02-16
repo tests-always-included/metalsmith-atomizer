@@ -1,6 +1,6 @@
 {
     "name": "metalsmith-atomizer",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "description": "Metalsmith plugin for Atomizer",
     "tags": [
         "metalsmith",
@@ -29,7 +29,7 @@
     "dependencies": {
         "atomizer": "^3.11.0",
         "debug": "^4.3.3",
-        "metalsmith-plugin-kit": "^1.2.0"
+        "metalsmith-plugin-kit": "^1.2.2"
     },
     "devDependencies": {
         "codecov": "^3.8.2",
